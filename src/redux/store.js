@@ -1,11 +1,17 @@
-import { combineReducers, createStore } from "redux";
-import { contactsReducer } from "./contactsReducer";
-import { devToolsEnhancer } from "@redux-devtools/extension";
+import { configureStore } from '@reduxjs/toolkit';
+import { createAction, createReducer } from '@reduxjs/toolkit';
 
-const rootReducer = combineReducers ({
-    contacts: contactsReducer
+export const increment = createAction('myValue/increment')
+
+export const decrement = createAction('myValue/decrement')
+
+const myReducer = createReducer(10, {
+    [increment]: (state, action) => state + action.payload,
+    [decrement]: (state, action) => state - action.payload,
 });
 
-
-const enhancer = devToolsEnhancer();
-export const store = createStore(rootReducer, enhancer);
+export const store = configureStore({
+  reducer: {
+    myValue: myReducer,
+  },
+});
