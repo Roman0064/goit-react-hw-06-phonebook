@@ -1,17 +1,33 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { createAction, createReducer } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
+import contactsSlice from './phonebookReducer';
 
-export const increment = createAction('myValue/increment')
-
-export const decrement = createAction('myValue/decrement')
-
-const myReducer = createReducer(10, {
-    [increment]: (state, action) => state + action.payload,
-    [decrement]: (state, action) => state - action.payload,
-});
+const persistConfig = {
+  key: 'contacts',
+  storage,
+  blacklist: ['filter']
+};
 
 export const store = configureStore({
   reducer: {
-    myValue: myReducer,
+    contacts: persistReducer(persistConfig, contactsSlice),
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+  }),
 });
+
+export const persistor = persistStore(store);
