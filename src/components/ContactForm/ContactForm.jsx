@@ -8,7 +8,6 @@ import { addContact } from 'redux/phonebookReducer';
 const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(state => state.contacts.contacts);
-  console.log(contacts)
 
   const onAddContact = (newContact) => {
     dispatch(addContact(newContact));
