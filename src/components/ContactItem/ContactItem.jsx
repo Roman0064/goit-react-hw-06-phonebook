@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import css from './ContactItem.module.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/phonebookReducer';
 
 const ContactItem = ({ contact, onDelete }) => {
   const { id, name, number } = contact;
@@ -22,10 +24,27 @@ ContactItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
-const ContactList = ({ contacts, onDeleteContact }) => {
+const ContactList = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.contacts.filter);
+
+  const getFilteredContacts = () => {
+    return contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(filter)
+    );
+  };
+
+  const filteredContacts = getFilteredContacts();
+
+  const onDeleteContact= (id) => {
+    dispatch(deleteContact(id));
+  };
+
+
   return (
     <ul className={css.wrapper}>
-      {contacts.map((contact) => (
+      {filteredContacts.map((contact) => (
         <ContactItem
           key={contact.id}
           contact={contact}

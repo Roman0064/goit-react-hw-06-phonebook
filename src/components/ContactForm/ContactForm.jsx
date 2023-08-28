@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/phonebookReducer';
 
-const ContactForm = ({ contacts, onAddContact}) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  console.log(contacts)
+
+  const onAddContact = (newContact) => {
+    dispatch(addContact(newContact));
+  };
 
   const [ name, setName ] = useState('');
   const [ number, setNumber ] = useState('');
